@@ -36,7 +36,7 @@ app.use(async (ctx, next) => {
 app.use(bodyParser());
 
 // add controllers:
-app.use(controller('controller'));
+app.use(controller());
 
 // 在端口3000监听:
 app.listen(3000);
