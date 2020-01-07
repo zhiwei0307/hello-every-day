@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>路由模板展示</title>
+    <link rel="stylesheet" href="static/css/template.css">
+    <script src="static/js/dom-to-image.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="container-inner" id="main">
+            <div class="header">
+                <div class="weather-info">
+                    <img src="<%= resourcePath+'/weather1.png' %>" alt="weather-icon">
+                    <span><%= weatherTip.tips %></span>
+                    <span> &nbsp;--郑州</span>
+                </div>
+            </div>
+            <div class="main">
+                <div class="one-pic">
+                    <img src="<%= resourcePath+'/day_one.jpg' %>" alt="">
+                </div>
+                <div class="one-word">
+                    <span><%= oneData.text %></span>
+                </div>
+            </div>
+            <div class="footer date">
+                <span class="day"><%= todaysEn.d > 9 ? todaysEn.d : '0' + todaysEn.d  %></span>
+                <span class="month"><%= todaysEn.m %></span>
+                <span class="year"><%= todaysEn.y %></span>
+                <span class="week"><%= todaysEn.w["cn"] %></span>
+            </div>
+        </div>
+        
+    </div>
+    <script src="static/js/template.js"></script>
+</body>
+</html>

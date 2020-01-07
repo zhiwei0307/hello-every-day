@@ -4,13 +4,33 @@ const Koa = require('koa');
 // 导入controller middleware:
 const controller = require('./controller');
 const schedule = require('./schedule');
+const views = require('koa-views');
 const bodyParser = require('koa-bodyparser');
-
+const path = require('path');
+const static = require('koa-static');
+const C = require('child_process');
+const { getMailData } = require('./utils');
 const app = new Koa();
-console.log('??', schedule())
-// log request URL:
+//配置需要渲染的文件路径及文件后缀
+app.use(views(path.join(__dirname,'./views'),{
+    extension:'ejs'
+}))
+app.use(static(__dirname, 'static'));
+
+const local = "zhengzhou";
+// 爬取数据的url
+const OneUrl = "http://wufazhuce.com/";
+const WeatherUrl = "https://tianqi.moji.com/weather/china/henan/" + local;
+getMailData(OneUrl, WeatherUrl).then(res => {
+    setTimeout(() => {
+        C.exec("start http://localhost:3000/mail");
+    }, 0)
+    global.oneData = res;
+});
+
+// schedule();
 app.use(async (ctx, next) => {
-    console.log(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    // console.log(`Process ${ctx.request.method} ${ctx.request.url}...`)
     await next();
 });
 
@@ -18,7 +38,7 @@ app.use(async (ctx, next) => {
 app.use(bodyParser());
 
 // add controllers:
-app.use(controller('controller'));
+app.use(controller());
 
 // 在端口3000监听:
 app.listen(3000);

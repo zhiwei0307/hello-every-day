@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>邮件模板</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            font-size: 14px;
+            color: #555;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            width: 720px;
+            height: auto;
+            min-height: 100%;
+            margin: 0 auto;
+            padding: 16px 0;
+            background-color: rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .container-inner {
+            width: 100%;
+            height: auto;
+        }
+
+        .header {
+            height: 36px;
+            padding: 5px 16px;
+        }
+
+        .weather-info {
+            width: auto;
+            line-height: 26px;
+            font-size: 13px;
+        }
+
+        .weather-info img {
+            width: 26px;
+            height: 26px;
+            float: left;
+            margin-right: 8px;
+        }
+
+        .main .one-pic {
+            width: 100%;
+            height: auto;
+            text-align: center;
+        }
+
+        .main .one-pic img {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+        }
+
+        .main .one-word {
+            padding: 16px;
+            font-size: 22px;
+            color: #333;
+            text-align: center;
+        }
+
+        .footer {
+            height: 26px;
+            padding: 0 16px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .date {
+            font-size: 16px;
+            text-align: right;
+        }
+
+        .date .day {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .date .week {
+            margin-left: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="container-inner">
+            <div class="header">
+                <div class="weather-info">
+                    <img src="<%= weatherData[0].WeatherImgUrl %>" alt="weather-icon">
+                    <span><%= weatherTip.tips %></span>
+                    <span> &nbsp;--郑州</span>
+                </div>
+            </div>
+            <div class="main">
+                <div class="one-pic">
+                    <img src="<%= oneData.imgUrl %>" alt="">
+                </div>
+                <div class="one-word">
+                    <span><%= oneData.text %></span>
+                </div>
+            </div>
+            <div class="footer date">
+                <span class="day"><%= todaysEn.d > 9 ? todaysEn.d : '0' + todaysEn.d  %></span>
+                <span class="month"><%= todaysEn.m %></span>
+                <span class="year"><%= todaysEn.y %></span>
+                <span class="week"><%= todaysEn.w["cn"] %></span>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
