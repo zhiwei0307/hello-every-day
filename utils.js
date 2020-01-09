@@ -1,11 +1,8 @@
 const superagent = require("superagent"); //发送网络请求获取DOM
 const cheerio = require("cheerio"); //能够像Jquery一样方便获取DOM节点
-const nodemailer = require("nodemailer"); //发送邮件的node插件
-const ejs = require("ejs"); //ejs模版引擎
 const fs = require("fs"); //文件读写
 const http = require('http');
 const https = require('https');
-const path = require("path"); //路径配置
 //配置项
 // 今日日期时间戳
 const today = new Date();
@@ -16,7 +13,7 @@ const today = new Date();
  */
 function getToday(decollator = '-') {
 	const y = today.getFullYear(), m = today.getMonth(), d = today.getDate();
-	return y + decollator + (m > 8 ? m + 1 : '0' + (m + 1)) + decollator + (d > 9 ? d : '0' + d );
+	return y + decollator + (m > 8 ? m + 1 : '0' + (m + 1)) + decollator + (d > 9 ? d : '0' + d);
 }
 
 // 引文格式日期
@@ -33,23 +30,23 @@ function getTodayEn() {
 			"enShort": 'Mon.'
 		}, {
 			"cn": "星期二",
-			"en": "Sunday",
+			"en": "Tuesday",
 			"enShort": 'Tues.'
 		}, {
 			"cn": "星期三",
-			"en": "Sunday",
+			"en": "Wednesday",
 			"enShort": 'Wed.'
 		}, {
 			"cn": "星期四",
-			"en": "Sunday",
+			"en": "Thursday",
 			"enShort": 'Thur.'
 		}, {
 			"cn": "星期五",
-			"en": "Sunday",
+			"en": "Friday",
 			"enShort": 'Fri.'
 		}, {
 			"cn": "星期六",
-			"en": "Sunday",
+			"en": "Saturday",
 			"enShort": 'Sat.'
 		}
 	];
@@ -74,21 +71,6 @@ function distDays(initDay = '2020/01/01') {
 	}
 	return Math.ceil((today - initDay) / 1000 / 60 / 60 / 24);
 }
-
-//发送者邮箱厂家
-let EmianService = "smtp.qq.com";
-//发送者邮箱账户SMTP授权码
-let EamilAuth = {
-	user: "619650434@qq.com",
-	pass: "yemthllglulhbgac"
-};
-//发送者昵称与邮箱地址
-let EmailFrom = '"vince" <619650434@qq.com>';
-
-//接收者邮箱地
-let EmailTo = "292858831@qq.com";
-//邮件主题
-let EmailSubject = "一封小邮件";
 
 // 获取ONE内容
 function getOneData(OneUrl, savePath) {
@@ -179,34 +161,6 @@ function getWeatherData(WeatherUrl, savePath) {
 	});
 }
 
-// 发动邮件
-function sendEmail(html) {
-	console.log(html, 'send mail')
-	let transporter = nodemailer.createTransport({
-		service: EmianService,
-		port: 465,
-		//开启安全连接
-		secure:false,
-		// secureConnection: true,
-		auth: EamilAuth
-	});
-
-	let mailOptions = {
-		from: EmailFrom,
-		to: EmailTo,
-		subject: EmailSubject,
-		html: html
-	};
-	transporter.sendMail(mailOptions, (error, info = {}) => {
-		if (error) {
-			console.log(error);
-			sendEmail(html); //再次发送
-		}
-		console.log("邮件发送成功", info.messageId);
-		console.log(info);
-		console.log("静等下一次发送");
-	});
-}
 // 创建文件夹
 function createFolder() {
 	let curPath = `static/images/spider/${getToday()}`;
@@ -236,7 +190,7 @@ function createFolder() {
  * @param name 图片保存名称；
  */
 async function runSaveImgSync(src, path, name) {
-	const imgData = await requestImage(src, path, name);
+	await requestImage(src, path, name);
 }
 // 请求图片并返回图片数据
 function requestImage(src, path, name) {
@@ -277,15 +231,6 @@ function getMailData(OneUrl, WeatherUrl) {
 	})
 }
 
-console.log('**')
-// let rule = new schedule.RecurrenceRule();
-// rule.second = 10;
-// console.log('NodeMail: 开始等待目标时刻...')
-// let j = schedule.scheduleJob(rule, function () {
-//   console.log("执行任务");
-//   getAllDataAndSendMail();
-// });
-
 module.exports = {
 	getOneData,
 	getWeatherTips,
@@ -294,6 +239,5 @@ module.exports = {
 	getTodayEn,
 	createFolder,
 	distDays,
-	sendEmail,
 	getMailData
 }
