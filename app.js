@@ -6,6 +6,7 @@ const controller = require('./controller');
 const schedule = require('./schedule');
 const views = require('koa-views');
 const bodyParser = require('koa-bodyparser');
+const koaBody = require('koa-body');
 const path = require('path');
 const static = require('koa-static');
 const C = require('child_process');
@@ -35,8 +36,14 @@ app.use(async (ctx, next) => {
 });
 
 // parse request body:
+console.log(bodyParser())
 app.use(bodyParser());
-
+app.use(koaBody({
+    multipart: true,
+    formidable: {
+        maxFileSize: 50*1024*1024    // 设置上传文件大小最大限制，默认2M
+    }
+}));
 // add controllers:
 app.use(controller());
 

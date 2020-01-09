@@ -1,14 +1,48 @@
 
 var node = document.getElementById('main');
 
+/**
+*Base64字符串转二进制
+*/
+function dataURLtoBlob(dataurl) {
+    var arr = dataurl.split(','),
+    mime = arr[0].match(/:(.*?);/)[1],
+    bstr = atob(arr[1]),
+    n = bstr.length,
+    u8arr = new Uint8Array(n);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new Blob([u8arr], {
+        type: mime
+    });
+}
+
 domtoimage.toPng(node)
     .then(function (dataUrl) {
-        var img = new Image();
-        img.src = dataUrl;
-        document.body.appendChild(img);
-        $.post('http://localhost:3000/upload', {}, function(res) {
-            console.log(res)
-        }, 'JSON')
+        // var img = new Image();
+        // img.src = dataUrl;
+        // document.body.appendChild(img);
+        let formData = new FormData();
+        var blob = dataURLtoBlob(dataUrl);
+        console.log(blob)
+        formData.append("file", blob);
+        console.log(formData)
+        $.ajax({ // $.post，告辞
+            type: 'POST',
+            contentType: false, 
+            processData: false,
+            url: 'http://localhost:3000/upload',
+            data: formData,
+            dataType: 'JSON',
+            success: function (response) {
+                // TODO
+                console.log(response)
+            }
+        });
+        // $.post('http://localhost:3000/upload', formData, function(res) {
+        //     console.log(res)
+        // }, '')
     })
     .catch(function (error) {
         console.error('oops, something went wrong!', error);
