@@ -26,9 +26,9 @@ domtoimage.toPng(node)
         let formData = new FormData();
         var blob = dataURLtoBlob(dataUrl);
         console.log(blob)
-        formData.append("file", blob);
+        formData.append("file", blob, `day-one-${parseInt(Date.now()/1000)}.png`);
         console.log(formData)
-        $.ajax({ // $.post，告辞
+        $.ajax({
             type: 'POST',
             contentType: false, 
             processData: false,
@@ -40,9 +40,6 @@ domtoimage.toPng(node)
                 console.log(response)
             }
         });
-        // $.post('http://localhost:3000/upload', formData, function(res) {
-        //     console.log(res)
-        // }, '')
     })
     .catch(function (error) {
         console.error('oops, something went wrong!', error);
