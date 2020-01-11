@@ -3,6 +3,11 @@
  */
 const fs = require('fs');
 const path = require('path');
+const ejs = require('ejs');
+
+const sendEmail = require('../nodemailer');
+
+const qiniu = require('qiniu');
 const QINIU = {
     accessKey: 'HsARJlkg2PVFc7bKP3orSVgFdmzzd8vTTEO_U59Q',
     secretKey: 'SF1MKGEdPbTx5dAjAtE88IWcYsRQDvWqM8fIThX4',
@@ -43,8 +48,6 @@ const removeTemFile = (path) => {
 }
 // 上传文件到服务
 const uploadFile = (ctx, options) => {
-    console.log(ctx.req.headers, options)
-
     const mkdirResult = mkdirsSync(options.path)
     if (!mkdirResult) {
         return
@@ -52,34 +55,37 @@ const uploadFile = (ctx, options) => {
     let file = ctx.request.files.file //获取post提交的数据
 
     const reader = fs.createReadStream(file.path);
+    console.log('createReadStream', reader);
     let filePath = path.join('public/upload/') + `/${file.name}`;
     // 创建可写流
     const upStream = fs.createWriteStream(filePath);
     // 可读流通过管道写入可写流
     reader.pipe(upStream);
-    return { filePath: filePath }
+    return { fileName: file.name, filePath: filePath, readableStream: reader }
 }
 
 // 上传到七牛
-export const upToQiniu = (filePath, key) => {
+const upToQiniu = (fileData) => {
     const accessKey = QINIU.accessKey
     const secretKey = QINIU.secretKey
     const mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
     const options = {
-        scope: QINIU.bucket
+        scope: QINIU.bucket,
     }
     const putPolicy = new qiniu.rs.PutPolicy(options)
     const uploadToken = putPolicy.uploadToken(mac)
 
     const config = new qiniu.conf.Config()
     // 空间对应的机房 一定要按自己属区Zone对象
-    config.zone = qiniu.zone.Zone_z1
-    const localFile = filePath
+    config.zone = qiniu.zone.Zone_z1;
+    const localFile = fileData.filePath;
+    const readableStream = fileData.readableStream
     const formUploader = new qiniu.form_up.FormUploader(config)
     const putExtra = new qiniu.form_up.PutExtra()
     // 文件上传
     return new Promise((resolved, reject) => {
-        formUploader.putFile(uploadToken, key, localFile, putExtra, function (respErr, respBody, respInfo) {
+        formUploader.putStream(uploadToken, fileData.fileName, readableStream, putExtra, function (respErr, respBody, respInfo) {
+            console.log(respBody, respInfo)
             if (respErr) {
                 reject(respErr)
             } else {
@@ -97,12 +103,22 @@ const upload = async (ctx) => {
         fileType: 'image',
         path: filePath
     })
-    console.log(result, '图片信息');
+    // console.log(result, '图片信息');
     //   // 上传到七牛
-    // 	 const qiniu = await upToQiniu(imgPath, result.imgKey)
+    const qiniu = await upToQiniu(result)
     //   // 上传到七牛之后 删除原来的缓存文件
     // 	 removeTemFile(imgPath)
-    return result.filePath
+    const imgUrl = 'http://q3qs1jzvz.bkt.clouddn.com/' + qiniu.key;
+    console.log('qiniu return info: ', qiniu)
+    handleSendEmail(imgUrl);
+    return { localpath: result.filePath, netUrl: imgUrl }
+}
+// 发送邮件
+const handleSendEmail = function(imgUrl) {
+    const template = ejs.compile(fs.readFileSync(path.resolve('views/mail.ejs'), 'utf8'));
+    const html = template({img: imgUrl});
+    console.log('html', html)
+    sendEmail(html)
 }
 
 module.exports = {

@@ -38,6 +38,7 @@ domtoimage.toPng(node)
             success: function (response) {
                 // TODO
                 console.log(response)
+                alert(response.msg)
             }
         });
     })
