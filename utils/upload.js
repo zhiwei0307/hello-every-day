@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const ejs = require('ejs');
 
-const sendEmail = require('../nodemailer');
+const sendEmail = require('./nodemailer');
 
 const qiniu = require('qiniu');
 const QINIU = {

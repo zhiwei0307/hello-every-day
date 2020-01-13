@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const ejs = require('ejs');
 
-const { getMailData } = require('./utils');
+const { getMailData } = require('./index');
 const sendEmail = require('./nodemailer');
 //当地拼音,需要在下面的墨迹天气url确认
 const local = "zhengzhou";

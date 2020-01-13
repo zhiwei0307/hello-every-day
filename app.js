@@ -3,7 +3,6 @@ const Koa = require('koa');
 
 // 导入controller middleware:
 const controller = require('./controller');
-const schedule = require('./schedule');
 const views = require('koa-views');
 const bodyParser = require('koa-bodyparser');
 const koaBody = require('koa-body');
@@ -29,7 +28,6 @@ getMailData(OneUrl, WeatherUrl).then(res => {
     global.oneData = res;
 });
 
-// schedule();
 app.use(async (ctx, next) => {
     // console.log(`Process ${ctx.request.method} ${ctx.request.url}...`)
     await next();

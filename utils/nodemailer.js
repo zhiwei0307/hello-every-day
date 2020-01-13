@@ -24,7 +24,7 @@ const mail = {
     // 主题
     subject: '测试小邮件',
     // 收件人 的邮箱 可以是其他邮箱 不一定是qq邮箱
-    to: '292858831@qq.com',
+    to: 'sunzhiwei107@qq.com',
     // 内容
     text: '测试',
     //这里可以添加html标签
