@@ -11,33 +11,36 @@
 </head>
 <body>
     <div class="container">
-        <div class="container-inner" id="main">
-            <div class="header">
-                <div class="weather-info">
-                    <img src="<%= resourcePath+'/weather1.png' %>" alt="weather-icon">
-                    <span><%= weatherTip.tips %></span>
-                    <span> &nbsp;--郑州</span>
+        <div class="container-inner" id="main" style="background-image: url(<%= resourcePath+'/day_one.jpg' %>);">
+            <div class='frosted-glass'></div>
+            <div class="content">
+                <div class="header date">
+                    <span>
+                        <span class="day"><%= todaysEn.d > 9 ? todaysEn.d : '0' + todaysEn.d  %></span>
+                        <span class="month"><%= todaysEn.m %></span>
+                        <span class="year"><%= todaysEn.y %></span>
+                        <span class="week"><%= todaysEn.w["cn"] %></span>
+                    </span>
                 </div>
-            </div>
-            <div class="main">
-                <div class="one-pic">
-                    <img src="<%= resourcePath+'/day_one.jpg' %>" alt="">
+                <div class="main">
+                    <div class="one-word">
+                        <span><%= oneData.text %></span>
+                    </div>
                 </div>
-                <div class="one-word">
-                    <span><%= oneData.text %></span>
+                <div class="footer">
+                    <div class="weather-info">
+                        <div class="weather-icon">
+                            <img src="<%= resourcePath+'/weather1.png' %>" alt="weather-icon">
+                        </div>
+                        <span><%= weatherTip.tips %></span>
+                        <span> &nbsp;--郑州</span>
+                    </div>
+                    
                 </div>
-            </div>
-            <div class="footer date">
-                <span class="day"><%= todaysEn.d > 9 ? todaysEn.d : '0' + todaysEn.d  %></span>
-                <span class="month"><%= todaysEn.m %></span>
-                <span class="year"><%= todaysEn.y %></span>
-                <span class="week"><%= todaysEn.w["cn"] %></span>
             </div>
         </div>
-        
     </div>
     <script src="static/js/template.js"></script>
-    <img src="public/upload/day-one-1578659808.png" alt="">
     
 </body>
 </html>
